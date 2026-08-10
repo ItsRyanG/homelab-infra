@@ -13,17 +13,24 @@ spec:
     targetRevision: 2026.x
     helm:
       values: |
+        global:
+          env:
+            - name: AUTHENTIK_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: authentik-secret
+                  key: secret_key
+            - name: AUTHENTIK_POSTGRESQL__PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: authentik-secret
+                  key: postgresql_password
+
         authentik:
-          secret_key: ""
-          existingSecret:
-            secretName: authentik-secret
-            secretKeys:
-              secret_key: secret_key
           postgresql:
             host: "authentik-postgresql"
             name: authentik
             user: authentik
-            password: ""
           error_reporting:
             enabled: false
 
@@ -66,6 +73,7 @@ spec:
             existingSecret: authentik-secret
             secretKeys:
               userPasswordKey: postgresql_password
+              adminPasswordKey: postgresql_password
           primary:
             persistence:
               enabled: true
