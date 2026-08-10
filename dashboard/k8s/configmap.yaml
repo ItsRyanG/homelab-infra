@@ -48,7 +48,7 @@ data:
   services.yaml: |
     - Media:
         - Sonarr:
-            href: https://sonarr.lab.agffa.ca
+            href: https://sonarr.agffa.ca
             description: TV Shows
             icon: sonarr.png
             namespace: sonarr
@@ -59,7 +59,7 @@ data:
               key: "{{HOMEPAGE_VAR_SONARR_API_KEY}}"
               enableQueue: true
         - Radarr:
-            href: https://radarr.lab.agffa.ca
+            href: https://radarr.agffa.ca
             description: Movies
             icon: radarr.png
             namespace: radarr
@@ -70,7 +70,7 @@ data:
               key: "{{HOMEPAGE_VAR_RADARR_API_KEY}}"
               enableQueue: true
         - NZBGet:
-            href: https://nzbget.lab.agffa.ca
+            href: https://nzbget.agffa.ca
             description: Usenet Downloader
             icon: nzbget.png
             namespace: nzbget
@@ -81,7 +81,7 @@ data:
               username: ryan
               password: "{{HOMEPAGE_VAR_NZBGET_PASSWORD}}"
         - Plex:
-            href: https://plex.lab.agffa.ca
+            href: https://plex.agffa.ca
             description: Media Server
             icon: plex.png
             namespace: plex
