@@ -1,0 +1,9 @@
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Allow known homelab placeholder values"
+regexes = [
+  "REPLACE_WITH_.*",
+  "YOUR_CLOUDFLARE_API_TOKEN",
+]

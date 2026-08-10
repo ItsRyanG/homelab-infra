@@ -1,0 +1,156 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: homepage-config
+  namespace: homepage
+  labels:
+    app: homepage
+data:
+  settings.yaml: |
+    title: Lab Dashboard
+    theme: dark
+    color: slate
+    headerStyle: clean
+    allowInsecureConnections: true
+    layout:
+      Media:
+        style: row
+        columns: 4
+      Infrastructure:
+        style: row
+        columns: 4
+      Monitoring:
+        style: row
+        columns: 3
+
+  widgets.yaml: |
+    - greeting:
+        text_size: 3xl
+        text: agffa.ca homelab
+    - datetime:
+        text_size: xl
+        format:
+          dateStyle: long
+          timeStyle: short
+    - kubernetes:
+        cluster:
+          show: true
+          cpu: true
+          memory: true
+          showLabel: true
+          label: k3s
+        nodes:
+          show: true
+          cpu: true
+          memory: true
+          showLabel: true
+
+  services.yaml: |
+    - Media:
+        - Sonarr:
+            href: https://sonarr.lab.agffa.ca
+            description: TV Shows
+            icon: sonarr.png
+            namespace: sonarr
+            app: sonarr
+            widget:
+              type: sonarr
+              url: http://sonarr-service.sonarr.svc.cluster.local:8989
+              key: "{{HOMEPAGE_VAR_SONARR_API_KEY}}"
+              enableQueue: true
+        - Radarr:
+            href: https://radarr.lab.agffa.ca
+            description: Movies
+            icon: radarr.png
+            namespace: radarr
+            app: radarr
+            widget:
+              type: radarr
+              url: http://radarr-service.radarr.svc.cluster.local:7878
+              key: "{{HOMEPAGE_VAR_RADARR_API_KEY}}"
+              enableQueue: true
+        - NZBGet:
+            href: https://nzbget.lab.agffa.ca
+            description: Usenet Downloader
+            icon: nzbget.png
+            namespace: nzbget
+            app: nzbget
+            widget:
+              type: nzbget
+              url: http://nzbget-service.nzbget.svc.cluster.local:6789
+              username: ryan
+              password: "{{HOMEPAGE_VAR_NZBGET_PASSWORD}}"
+        - Plex:
+            href: https://plex.lab.agffa.ca
+            description: Media Server
+            icon: plex.png
+            namespace: plex
+            app: plex
+
+    - Infrastructure:
+        - ArgoCD:
+            href: https://argocd.lab.agffa.ca
+            description: GitOps
+            icon: argocd.png
+            namespace: argocd
+            app: argocd-server
+        - Longhorn:
+            href: https://longhorn.lab.agffa.ca
+            description: Block Storage
+            icon: longhorn.png
+        - Portainer:
+            href: https://portainer.lab.agffa.ca
+            description: Cluster Management
+            icon: portainer.png
+        - Traefik:
+            href: https://traefik.lab.agffa.ca
+            description: Reverse Proxy
+            icon: traefik.png
+            namespace: traefik
+            app: traefik-helm
+            widget:
+              type: traefik
+              url: http://traefik-helm.traefik.svc.cluster.local:8080
+
+    - Monitoring:
+        - Grafana:
+            href: https://grafana.lab.agffa.ca
+            description: Metrics & Dashboards
+            icon: grafana.png
+            namespace: monitoring
+            app: kube-prometheus-stack-grafana
+            widget:
+              type: grafana
+              url: http://kube-prometheus-stack-grafana.monitoring.svc.cluster.local
+              username: admin
+              password: admin
+        - Prometheus:
+            href: https://prometheus.lab.agffa.ca
+            description: Metrics
+            icon: prometheus.png
+            namespace: monitoring
+            app: kube-prometheus-stack-prometheus
+            widget:
+              type: prometheus
+              url: http://kube-prometheus-stack-prometheus.monitoring.svc.cluster.local:9090
+        - CrowdSec:
+            href: https://crowdsec.lab.agffa.ca
+            description: Security Engine
+            icon: crowdsec.png
+
+  bookmarks.yaml: |
+    - Quick Links:
+        - GitHub:
+            - href: https://github.com/ItsRyanG
+              icon: github.png
+        - Cloudflare:
+            - href: https://dash.cloudflare.com
+              icon: cloudflare.png
+        - Unraid:
+            - href: http://192.168.2.100
+              icon: unraid.png
+
+  kubernetes.yaml: |
+    mode: cluster
+
+  docker.yaml: ""

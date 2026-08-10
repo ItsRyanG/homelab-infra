@@ -1,0 +1,70 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: homepage
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: https://jameswynn.github.io/helm-charts
+    chart: homepage
+    targetRevision: 2.x
+    helm:
+      values: |
+        image:
+          repository: ghcr.io/gethomepage/homepage
+          tag: latest
+
+        enableRbac: true
+        serviceAccount:
+          create: true
+          name: homepage
+
+        ingress:
+          main:
+            enabled: true
+            ingressClassName: traefik
+            annotations:
+              traefik.ingress.kubernetes.io/router.entrypoints: websecure
+              traefik.ingress.kubernetes.io/router.tls: "true"
+            hosts:
+              - host: home.lab.agffa.ca
+                paths:
+                  - path: /
+                    pathType: Prefix
+            tls:
+              - secretName: agffa-tls
+                hosts:
+                  - home.lab.agffa.ca
+
+        persistence:
+          logs:
+            enabled: true
+            type: emptyDir
+            mountPath: /app/config/logs
+
+        config:
+          useExistingConfigMap: homepage-config
+
+        env:
+          - name: HOMEPAGE_ALLOWED_HOSTS
+            value: "home.lab.agffa.ca"
+
+        resources:
+          requests:
+            memory: 256Mi
+            cpu: 100m
+          limits:
+            memory: 512Mi
+            cpu: 500m
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: homepage
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
