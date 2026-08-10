@@ -107,7 +107,7 @@ data:
             description: Reverse Proxy
             icon: traefik.png
             namespace: traefik
-            app: traefik-helm
+            app: traefik
             widget:
               type: traefik
               url: http://traefik-helm.traefik.svc.cluster.local:8080
@@ -118,7 +118,7 @@ data:
             description: Metrics & Dashboards
             icon: grafana.png
             namespace: monitoring
-            app: kube-prometheus-stack-grafana
+            app: grafana
             widget:
               type: grafana
               url: http://kube-prometheus-stack-grafana.monitoring.svc.cluster.local
@@ -129,7 +129,7 @@ data:
             description: Metrics
             icon: prometheus.png
             namespace: monitoring
-            app: kube-prometheus-stack-prometheus
+            app: prometheus
             widget:
               type: prometheus
               url: http://kube-prometheus-stack-prometheus.monitoring.svc.cluster.local:9090
