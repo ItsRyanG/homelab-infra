@@ -78,6 +78,7 @@ data:
             widget:
               type: nzbget
               url: http://nzbget-service.nzbget.svc.cluster.local:6789
+              username: ryan
               password: "{{HOMEPAGE_VAR_NZBGET_PASSWORD}}"
         - Plex:
             href: https://plex.agffa.ca
