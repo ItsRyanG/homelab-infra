@@ -1,0 +1,96 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: authentik
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: https://charts.goauthentik.io
+    chart: authentik
+    targetRevision: 2026.x
+    helm:
+      values: |
+        authentik:
+          secret_key: ""
+          existingSecret:
+            secretName: authentik-secret
+            secretKeys:
+              secret_key: secret_key
+          postgresql:
+            host: "authentik-postgresql"
+            name: authentik
+            user: authentik
+            password: ""
+          error_reporting:
+            enabled: false
+
+        server:
+          ingress:
+            enabled: true
+            ingressClassName: traefik
+            annotations:
+              traefik.ingress.kubernetes.io/router.entrypoints: websecure
+              traefik.ingress.kubernetes.io/router.tls: "true"
+              cert-manager.io/cluster-issuer: letsencrypt-production
+            hosts:
+              - authentik.lab.agffa.ca
+            tls:
+              - secretName: authentik-tls
+                hosts:
+                  - authentik.lab.agffa.ca
+          resources:
+            requests:
+              memory: 512Mi
+              cpu: 100m
+            limits:
+              memory: 1Gi
+              cpu: 500m
+
+        worker:
+          resources:
+            requests:
+              memory: 256Mi
+              cpu: 50m
+            limits:
+              memory: 512Mi
+              cpu: 250m
+
+        postgresql:
+          enabled: true
+          auth:
+            username: authentik
+            database: authentik
+            existingSecret: authentik-secret
+            secretKeys:
+              userPasswordKey: postgresql_password
+          primary:
+            persistence:
+              enabled: true
+              storageClass: longhorn
+              size: 8Gi
+            resources:
+              requests:
+                memory: 256Mi
+                cpu: 100m
+              limits:
+                memory: 512Mi
+                cpu: 250m
+
+        prometheus:
+          rules:
+            enabled: false
+          serviceMonitor:
+            enabled: false
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: authentik
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true
