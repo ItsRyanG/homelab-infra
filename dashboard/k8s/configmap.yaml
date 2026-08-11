@@ -110,7 +110,7 @@ data:
             app: traefik
             widget:
               type: traefik
-              url: http://traefik-helm.traefik.svc.cluster.local:8080
+              url: http://traefik-dashboard.traefik.svc.cluster.local:8080
 
     - Monitoring:
         - Grafana:

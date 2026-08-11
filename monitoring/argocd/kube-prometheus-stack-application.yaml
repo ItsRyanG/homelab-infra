@@ -28,11 +28,11 @@ spec:
               traefik.ingress.kubernetes.io/router.entrypoints: websecure
               traefik.ingress.kubernetes.io/router.tls: "true"
             hosts:
-              - grafana.lab.agffa.ca
+              - grafana.agffa.ca
             tls:
               - secretName: agffa-tls
                 hosts:
-                  - grafana.lab.agffa.ca
+                  - grafana.agffa.ca
           persistence:
             enabled: true
             storageClassName: longhorn

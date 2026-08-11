@@ -24,14 +24,14 @@ spec:
               cert-manager.io/cluster-issuer: letsencrypt-production
               traefik.ingress.kubernetes.io/router.middlewares: portainer-ip-allowlist-home@kubernetescrd
             hosts:
-              - host: portainer.lab.agffa.ca
+              - host: portainer.agffa.ca
                 paths:
                   - path: /
                     pathType: Prefix
             tls:
               - secretName: agffa-tls
                 hosts:
-                  - portainer.lab.agffa.ca
+                  - portainer.agffa.ca
           persistence:
             enabled: true
             storageClass: longhorn

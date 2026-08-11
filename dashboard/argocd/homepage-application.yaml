@@ -30,14 +30,14 @@ spec:
               traefik.ingress.kubernetes.io/router.entrypoints: websecure
               traefik.ingress.kubernetes.io/router.tls: "true"
             hosts:
-              - host: home.lab.agffa.ca
+              - host: home.agffa.ca
                 paths:
                   - path: /
                     pathType: Prefix
             tls:
               - secretName: agffa-tls
                 hosts:
-                  - home.lab.agffa.ca
+                  - home.agffa.ca
 
         persistence:
           logs:
@@ -50,7 +50,7 @@ spec:
 
         env:
           - name: HOMEPAGE_ALLOWED_HOSTS
-            value: "home.lab.agffa.ca"
+            value: "home.agffa.ca"
 
         envFrom:
           - secretRef:
