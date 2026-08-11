@@ -29,6 +29,7 @@ spec:
               annotations:
                 traefik.ingress.kubernetes.io/router.entrypoints: websecure
                 traefik.ingress.kubernetes.io/router.tls: "true"
+                traefik.ingress.kubernetes.io/router.middlewares: traefik-authentik-forwardauth@kubernetescrd
                 cert-manager.io/cluster-issuer: letsencrypt-production
               hosts:
                 - grafana.agffa.ca
