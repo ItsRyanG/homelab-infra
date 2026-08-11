@@ -21,6 +21,8 @@ spec:
           grafana:
             enabled: true
             adminPassword: admin
+            deploymentStrategy:
+              type: Recreate
             ingress:
               enabled: true
               ingressClassName: traefik
