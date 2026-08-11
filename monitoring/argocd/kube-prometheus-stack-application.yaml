@@ -12,65 +12,66 @@ spec:
       chart: kube-prometheus-stack
       targetRevision: 65.x
       helm:
-      values: |
-        nameOverride: prometheus
+        values: |
+          nameOverride: prometheus
 
-        alertmanager:
-          enabled: false
+          alertmanager:
+            enabled: false
 
-        grafana:
-          enabled: true
-          adminPassword: admin
-          ingress:
+          grafana:
             enabled: true
-            ingressClassName: traefik
-            annotations:
-              traefik.ingress.kubernetes.io/router.entrypoints: websecure
-              traefik.ingress.kubernetes.io/router.tls: "true"
-              cert-manager.io/cluster-issuer: letsencrypt-production
-            hosts:
-              - grafana.agffa.ca
-            tls:
-              - secretName: grafana-tls
-                hosts:
-                  - grafana.agffa.ca
-          persistence:
-            enabled: true
-            storageClassName: longhorn
-            size: 5Gi
-          sidecar:
-            dashboards:
+            adminPassword: admin
+            ingress:
               enabled: true
-              searchNamespace: ALL
-          additionalDataSources:
-            - name: Longhorn
-              type: prometheus
-              url: http://longhorn-backend.longhorn-system.svc.cluster.local:9500/metrics
-              access: proxy
+              ingressClassName: traefik
+              annotations:
+                traefik.ingress.kubernetes.io/router.entrypoints: websecure
+                traefik.ingress.kubernetes.io/router.tls: "true"
+                cert-manager.io/cluster-issuer: letsencrypt-production
+              hosts:
+                - grafana.agffa.ca
+              tls:
+                - secretName: grafana-tls
+                  hosts:
+                    - grafana.agffa.ca
+            persistence:
+              enabled: true
+              storageClassName: longhorn
+              size: 5Gi
+            sidecar:
+              dashboards:
+                enabled: true
+                searchNamespace: ALL
+            additionalDataSources:
+              - name: Longhorn
+                type: prometheus
+                url: http://longhorn-backend.longhorn-system.svc.cluster.local:9500/metrics
+                access: proxy
 
-        prometheus:
-          prometheusSpec:
-            retention: 15d
-            storageSpec:
-              volumeClaimTemplate:
-                spec:
-                  storageClassName: longhorn
-                  accessModes: [ReadWriteOnce]
-                  resources:
-                    requests:
-                      storage: 20Gi
-            serviceMonitorSelectorNilUsesHelmValues: false
-            podMonitorSelectorNilUsesHelmValues: false
+          prometheus:
+            prometheusSpec:
+              retention: 15d
+              storageSpec:
+                volumeClaimTemplate:
+                  spec:
+                    storageClassName: longhorn
+                    accessModes: [ReadWriteOnce]
+                    resources:
+                      requests:
+                        storage: 20Gi
+              serviceMonitorSelectorNilUsesHelmValues: false
+              podMonitorSelectorNilUsesHelmValues: false
 
-        nodeExporter:
-          enabled: true
+          nodeExporter:
+            enabled: true
 
-        kubeStateMetrics:
-          enabled: true
+          kubeStateMetrics:
+            enabled: true
 
     - repoURL: https://github.com/ItsRyanG/homelab-infra.git
       targetRevision: master
       path: monitoring/k8s
+
   destination:
     server: https://kubernetes.default.svc
     namespace: monitoring
