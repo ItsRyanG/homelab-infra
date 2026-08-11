@@ -29,13 +29,15 @@ spec:
             annotations:
               traefik.ingress.kubernetes.io/router.entrypoints: websecure
               traefik.ingress.kubernetes.io/router.tls: "true"
+              traefik.ingress.kubernetes.io/router.middlewares: traefik-authentik-forwardauth@kubernetescrd
+              cert-manager.io/cluster-issuer: letsencrypt-production
             hosts:
               - host: home.agffa.ca
                 paths:
                   - path: /
                     pathType: Prefix
             tls:
-              - secretName: agffa-tls
+              - secretName: homepage-tls
                 hosts:
                   - home.agffa.ca
 
