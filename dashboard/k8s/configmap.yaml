@@ -89,7 +89,7 @@ data:
 
     - Infrastructure:
         - ArgoCD:
-            href: https://argocd.lab.agffa.ca
+            href: https://argocd.agffa.ca
             description: GitOps
             icon: argocd.png
             namespace: argocd

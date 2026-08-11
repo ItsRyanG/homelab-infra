@@ -48,4 +48,9 @@ data:
         originRequest:
           noTLSVerify: true
           originServerName: authentik.agffa.ca
+      - hostname: argocd.agffa.ca
+        service: https://traefik-helm.traefik.svc.cluster.local:443
+        originRequest:
+          noTLSVerify: true
+          originServerName: argocd.agffa.ca
       - service: http_status:404

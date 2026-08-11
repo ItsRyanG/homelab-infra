@@ -7,92 +7,103 @@ metadata:
     - resources-finalizer.argocd.argoproj.io
 spec:
   project: default
-  source:
-    repoURL: https://charts.goauthentik.io
-    chart: authentik
-    targetRevision: 2026.x
-    helm:
-      values: |
-        global:
-          env:
-            - name: AUTHENTIK_SECRET_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: authentik-secret
-                  key: secret_key
-            - name: AUTHENTIK_POSTGRESQL__PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: authentik-secret
-                  key: postgresql_password
+  sources:
+    - repoURL: https://charts.goauthentik.io
+      chart: authentik
+      targetRevision: 2026.x
+      helm:
+        values: |
+          global:
+            env:
+              - name: AUTHENTIK_SECRET_KEY
+                valueFrom:
+                  secretKeyRef:
+                    name: authentik-secret
+                    key: secret_key
+              - name: AUTHENTIK_POSTGRESQL__PASSWORD
+                valueFrom:
+                  secretKeyRef:
+                    name: authentik-secret
+                    key: postgresql_password
 
-        authentik:
-          postgresql:
-            host: "authentik-postgresql"
-            name: authentik
-            user: authentik
-          error_reporting:
-            enabled: false
+          authentik:
+            postgresql:
+              host: "authentik-postgresql"
+              name: authentik
+              user: authentik
+            error_reporting:
+              enabled: false
 
-        server:
-          ingress:
-            enabled: true
-            ingressClassName: traefik
-            annotations:
-              traefik.ingress.kubernetes.io/router.entrypoints: websecure
-              traefik.ingress.kubernetes.io/router.tls: "true"
-              cert-manager.io/cluster-issuer: letsencrypt-production
-            hosts:
-              - authentik.agffa.ca
-            tls:
-              - secretName: authentik-tls
-                hosts:
-                  - authentik.agffa.ca
-          resources:
-            requests:
-              memory: 512Mi
-              cpu: 100m
-            limits:
-              memory: 1Gi
-              cpu: 500m
-
-        worker:
-          livenessProbe:
-            timeoutSeconds: 10
-          readinessProbe:
-            timeoutSeconds: 10
-          startupProbe:
-            timeoutSeconds: 10
-            failureThreshold: 90
-          resources:
-            requests:
-              memory: 512Mi
-              cpu: 100m
-            limits:
-              memory: 1Gi
-              cpu: 500m
-
-        postgresql:
-          enabled: true
-          auth:
-            username: authentik
-            database: authentik
-            existingSecret: authentik-secret
-            secretKeys:
-              userPasswordKey: postgresql_password
-              adminPasswordKey: postgresql_password
-          primary:
-            persistence:
+          server:
+            ingress:
               enabled: true
-              storageClass: longhorn
-              size: 8Gi
+              ingressClassName: traefik
+              annotations:
+                traefik.ingress.kubernetes.io/router.entrypoints: websecure
+                traefik.ingress.kubernetes.io/router.tls: "true"
+                cert-manager.io/cluster-issuer: letsencrypt-production
+              hosts:
+                - authentik.agffa.ca
+              tls:
+                - secretName: authentik-tls
+                  hosts:
+                    - authentik.agffa.ca
             resources:
               requests:
-                memory: 256Mi
+                memory: 512Mi
                 cpu: 100m
               limits:
+                memory: 1Gi
+                cpu: 500m
+
+          worker:
+            extraVolumes:
+              - name: blueprints-custom
+                configMap:
+                  name: authentik-blueprints
+            extraVolumeMounts:
+              - name: blueprints-custom
+                mountPath: /blueprints/custom
+            livenessProbe:
+              timeoutSeconds: 10
+            readinessProbe:
+              timeoutSeconds: 10
+            startupProbe:
+              timeoutSeconds: 10
+              failureThreshold: 90
+            resources:
+              requests:
                 memory: 512Mi
-                cpu: 250m
+                cpu: 100m
+              limits:
+                memory: 1Gi
+                cpu: 500m
+
+          postgresql:
+            enabled: true
+            auth:
+              username: authentik
+              database: authentik
+              existingSecret: authentik-secret
+              secretKeys:
+                userPasswordKey: postgresql_password
+                adminPasswordKey: postgresql_password
+            primary:
+              persistence:
+                enabled: true
+                storageClass: longhorn
+                size: 8Gi
+              resources:
+                requests:
+                  memory: 256Mi
+                  cpu: 100m
+                limits:
+                  memory: 512Mi
+                  cpu: 250m
+
+    - repoURL: https://github.com/ItsRyanG/homelab-infra.git
+      targetRevision: master
+      path: authentik/k8s
 
   destination:
     server: https://kubernetes.default.svc
