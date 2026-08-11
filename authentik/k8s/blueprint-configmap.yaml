@@ -38,5 +38,8 @@ data:
         attrs:
           name: authentik Embedded Outpost
           type: proxy
+          config:
+            authentik_host: https://authentik.agffa.ca
+            authentik_host_browser: https://authentik.agffa.ca
           providers:
             - !Find [authentik_providers_proxy.proxyprovider, [name, traefik-forwardauth]]
