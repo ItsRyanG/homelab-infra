@@ -7,11 +7,11 @@ metadata:
     - resources-finalizer.argocd.argoproj.io
 spec:
   project: default
-  source:
-    repoURL: https://prometheus-community.github.io/helm-charts
-    chart: kube-prometheus-stack
-    targetRevision: 65.x
-    helm:
+  sources:
+    - repoURL: https://prometheus-community.github.io/helm-charts
+      chart: kube-prometheus-stack
+      targetRevision: 65.x
+      helm:
       values: |
         nameOverride: prometheus
 
@@ -49,21 +49,6 @@ spec:
               access: proxy
 
         prometheus:
-          ingress:
-            enabled: true
-            ingressClassName: traefik
-            annotations:
-              traefik.ingress.kubernetes.io/router.entrypoints: websecure
-              traefik.ingress.kubernetes.io/router.tls: "true"
-              cert-manager.io/cluster-issuer: letsencrypt-production
-            hosts:
-              - prometheus.agffa.ca
-            paths:
-              - /
-            tls:
-              - secretName: prometheus-tls
-                hosts:
-                  - prometheus.agffa.ca
           prometheusSpec:
             retention: 15d
             storageSpec:
@@ -82,6 +67,10 @@ spec:
 
         kubeStateMetrics:
           enabled: true
+
+    - repoURL: https://github.com/ItsRyanG/homelab-infra.git
+      targetRevision: master
+      path: monitoring/k8s
   destination:
     server: https://kubernetes.default.svc
     namespace: monitoring
