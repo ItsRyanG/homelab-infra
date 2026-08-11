@@ -27,10 +27,11 @@ spec:
             annotations:
               traefik.ingress.kubernetes.io/router.entrypoints: websecure
               traefik.ingress.kubernetes.io/router.tls: "true"
+              cert-manager.io/cluster-issuer: letsencrypt-production
             hosts:
               - grafana.agffa.ca
             tls:
-              - secretName: agffa-tls
+              - secretName: grafana-tls
                 hosts:
                   - grafana.agffa.ca
           persistence:
@@ -48,6 +49,21 @@ spec:
               access: proxy
 
         prometheus:
+          ingress:
+            enabled: true
+            ingressClassName: traefik
+            annotations:
+              traefik.ingress.kubernetes.io/router.entrypoints: websecure
+              traefik.ingress.kubernetes.io/router.tls: "true"
+              cert-manager.io/cluster-issuer: letsencrypt-production
+            hosts:
+              - prometheus.agffa.ca
+            paths:
+              - /
+            tls:
+              - secretName: prometheus-tls
+                hosts:
+                  - prometheus.agffa.ca
           prometheusSpec:
             retention: 15d
             storageSpec:

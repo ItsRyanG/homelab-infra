@@ -95,7 +95,7 @@ data:
             namespace: argocd
             app: argocd-server
         - Longhorn:
-            href: https://longhorn.lab.agffa.ca
+            href: https://longhorn.agffa.ca
             description: Block Storage
             icon: longhorn.png
         - Portainer:
@@ -103,7 +103,7 @@ data:
             description: Cluster Management
             icon: portainer.png
         - Traefik:
-            href: https://traefik.lab.agffa.ca
+            href: https://traefik.agffa.ca
             description: Reverse Proxy
             icon: traefik.png
             namespace: traefik
@@ -125,7 +125,7 @@ data:
               username: admin
               password: admin
         - Prometheus:
-            href: https://prometheus.lab.agffa.ca
+            href: https://prometheus.agffa.ca
             description: Metrics
             icon: prometheus.png
             namespace: monitoring
@@ -134,7 +134,7 @@ data:
               type: prometheus
               url: http://kube-prometheus-stack-prometheus.monitoring.svc.cluster.local:9090
         - CrowdSec:
-            href: https://crowdsec.lab.agffa.ca
+            href: https://app.crowdsec.net
             description: Security Engine
             icon: crowdsec.png
 

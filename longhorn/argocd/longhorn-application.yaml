@@ -7,18 +7,21 @@ metadata:
     - resources-finalizer.argocd.argoproj.io
 spec:
   project: default
-  source:
-    repoURL: https://charts.longhorn.io
-    chart: longhorn
-    targetRevision: 1.7.x
-    helm:
-      values: |
-        defaultSettings:
-          defaultReplicaCount: 2
-          storageMinimalAvailablePercentage: 10
-          defaultDataPath: /var/lib/longhorn
-        persistence:
-          defaultClassReplicaCount: 2
+  sources:
+    - repoURL: https://charts.longhorn.io
+      chart: longhorn
+      targetRevision: 1.7.x
+      helm:
+        values: |
+          defaultSettings:
+            defaultReplicaCount: 2
+            storageMinimalAvailablePercentage: 10
+            defaultDataPath: /var/lib/longhorn
+          persistence:
+            defaultClassReplicaCount: 2
+    - repoURL: https://github.com/ItsRyanG/homelab-infra.git
+      targetRevision: master
+      path: longhorn/k8s
   destination:
     server: https://kubernetes.default.svc
     namespace: longhorn-system

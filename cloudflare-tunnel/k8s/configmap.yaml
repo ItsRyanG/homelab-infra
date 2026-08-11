@@ -53,4 +53,19 @@ data:
         originRequest:
           noTLSVerify: true
           originServerName: argocd.agffa.ca
+      - hostname: longhorn.agffa.ca
+        service: https://traefik-helm.traefik.svc.cluster.local:443
+        originRequest:
+          noTLSVerify: true
+          originServerName: longhorn.agffa.ca
+      - hostname: traefik.agffa.ca
+        service: https://traefik-helm.traefik.svc.cluster.local:443
+        originRequest:
+          noTLSVerify: true
+          originServerName: traefik.agffa.ca
+      - hostname: prometheus.agffa.ca
+        service: https://traefik-helm.traefik.svc.cluster.local:443
+        originRequest:
+          noTLSVerify: true
+          originServerName: prometheus.agffa.ca
       - service: http_status:404
