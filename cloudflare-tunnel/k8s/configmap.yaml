@@ -7,23 +7,45 @@ data:
   config.yaml: |
     tunnel: 4a45edc2-492c-4e56-9214-6c114a5e2227
     no-autoupdate: true
-    originRequest:
-      noTLSVerify: true
     ingress:
       - hostname: sonarr.agffa.ca
         service: https://traefik-helm.traefik.svc.cluster.local:443
+        originRequest:
+          noTLSVerify: true
+          originServerName: sonarr.agffa.ca
       - hostname: radarr.agffa.ca
         service: https://traefik-helm.traefik.svc.cluster.local:443
+        originRequest:
+          noTLSVerify: true
+          originServerName: radarr.agffa.ca
       - hostname: nzbget.agffa.ca
         service: https://traefik-helm.traefik.svc.cluster.local:443
+        originRequest:
+          noTLSVerify: true
+          originServerName: nzbget.agffa.ca
       - hostname: plex.agffa.ca
         service: https://traefik-helm.traefik.svc.cluster.local:443
+        originRequest:
+          noTLSVerify: true
+          originServerName: plex.agffa.ca
       - hostname: home.agffa.ca
         service: https://traefik-helm.traefik.svc.cluster.local:443
+        originRequest:
+          noTLSVerify: true
+          originServerName: home.agffa.ca
       - hostname: grafana.agffa.ca
         service: https://traefik-helm.traefik.svc.cluster.local:443
+        originRequest:
+          noTLSVerify: true
+          originServerName: grafana.agffa.ca
       - hostname: portainer.agffa.ca
         service: https://traefik-helm.traefik.svc.cluster.local:443
+        originRequest:
+          noTLSVerify: true
+          originServerName: portainer.agffa.ca
       - hostname: authentik.agffa.ca
         service: https://traefik-helm.traefik.svc.cluster.local:443
+        originRequest:
+          noTLSVerify: true
+          originServerName: authentik.agffa.ca
       - service: http_status:404
