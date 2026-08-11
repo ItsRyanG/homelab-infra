@@ -99,7 +99,7 @@ data:
             description: Block Storage
             icon: longhorn.png
         - Portainer:
-            href: https://portainer.lab.agffa.ca
+            href: https://portainer.agffa.ca
             description: Cluster Management
             icon: portainer.png
         - Traefik:
@@ -114,7 +114,7 @@ data:
 
     - Monitoring:
         - Grafana:
-            href: https://grafana.lab.agffa.ca
+            href: https://grafana.agffa.ca
             description: Metrics & Dashboards
             icon: grafana.png
             namespace: monitoring
