@@ -16,4 +16,12 @@ data:
         service: http://traefik-helm.traefik.svc.cluster.local:80
       - hostname: plex.agffa.ca
         service: http://traefik-helm.traefik.svc.cluster.local:80
+      - hostname: home.lab.agffa.ca
+        service: http://traefik-helm.traefik.svc.cluster.local:80
+      - hostname: grafana.lab.agffa.ca
+        service: http://traefik-helm.traefik.svc.cluster.local:80
+      - hostname: portainer.lab.agffa.ca
+        service: http://traefik-helm.traefik.svc.cluster.local:80
+      - hostname: authentik.lab.agffa.ca
+        service: http://traefik-helm.traefik.svc.cluster.local:80
       - service: http_status:404

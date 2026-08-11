@@ -1,0 +1,68 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: ip-monitor
+  namespace: portainer
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: ip-monitor
+  namespace: portainer
+rules:
+  - apiGroups: ["traefik.io"]
+    resources: ["middlewares"]
+    resourceNames: ["ip-allowlist-home"]
+    verbs: ["get", "patch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: ip-monitor
+  namespace: portainer
+subjects:
+  - kind: ServiceAccount
+    name: ip-monitor
+    namespace: portainer
+roleRef:
+  kind: Role
+  name: ip-monitor
+  apiGroup: rbac.authorization.k8s.io
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: ip-monitor
+  namespace: portainer
+spec:
+  schedule: "*/30 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          serviceAccountName: ip-monitor
+          restartPolicy: OnFailure
+          containers:
+            - name: ip-monitor
+              image: bitnami/kubectl:latest
+              command:
+                - /bin/sh
+                - -c
+                - |
+                  CURRENT_IP=$(wget -qO- ifconfig.me)
+                  EXISTING=$(kubectl get middleware ip-allowlist-home -n portainer \
+                    -o jsonpath='{.spec.ipAllowList.sourceRange[0]}' | cut -d/ -f1)
+                  if [ "$CURRENT_IP" != "$EXISTING" ]; then
+                    echo "WAN IP changed: $EXISTING -> $CURRENT_IP. Updating allowlist."
+                    kubectl patch middleware ip-allowlist-home -n portainer --type='json' \
+                      -p="[{\"op\":\"replace\",\"path\":\"/spec/ipAllowList/sourceRange/0\",\"value\":\"${CURRENT_IP}/32\"}]"
+                  else
+                    echo "WAN IP unchanged: $CURRENT_IP"
+                  fi
+              resources:
+                requests:
+                  cpu: 10m
+                  memory: 32Mi
+                limits:
+                  cpu: 50m
+                  memory: 64Mi

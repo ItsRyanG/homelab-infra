@@ -7,41 +7,45 @@ metadata:
     - resources-finalizer.argocd.argoproj.io
 spec:
   project: default
-  source:
-    repoURL: https://portainer.github.io/k8s
-    chart: portainer
-    targetRevision: 1.0.x
-    helm:
-      values: |
-        service:
-          type: ClusterIP
-        ingress:
-          enabled: true
-          ingressClassName: traefik
-          annotations:
-            traefik.ingress.kubernetes.io/router.entrypoints: websecure
-            traefik.ingress.kubernetes.io/router.tls: "true"
-            cert-manager.io/cluster-issuer: letsencrypt-production
-          hosts:
-            - host: portainer.lab.agffa.ca
-              paths:
-                - path: /
-                  pathType: Prefix
-          tls:
-            - secretName: agffa-tls
-              hosts:
-                - portainer.lab.agffa.ca
-        persistence:
-          enabled: true
-          storageClass: longhorn
-          size: 5Gi
-        resources:
-          requests:
-            memory: 512Mi
-            cpu: 100m
-          limits:
-            memory: 1Gi
-            cpu: 500m
+  sources:
+    - repoURL: https://portainer.github.io/k8s
+      chart: portainer
+      targetRevision: 1.0.x
+      helm:
+        values: |
+          service:
+            type: ClusterIP
+          ingress:
+            enabled: true
+            ingressClassName: traefik
+            annotations:
+              traefik.ingress.kubernetes.io/router.entrypoints: websecure
+              traefik.ingress.kubernetes.io/router.tls: "true"
+              cert-manager.io/cluster-issuer: letsencrypt-production
+              traefik.ingress.kubernetes.io/router.middlewares: portainer-ip-allowlist-home@kubernetescrd
+            hosts:
+              - host: portainer.lab.agffa.ca
+                paths:
+                  - path: /
+                    pathType: Prefix
+            tls:
+              - secretName: agffa-tls
+                hosts:
+                  - portainer.lab.agffa.ca
+          persistence:
+            enabled: true
+            storageClass: longhorn
+            size: 5Gi
+          resources:
+            requests:
+              memory: 512Mi
+              cpu: 100m
+            limits:
+              memory: 1Gi
+              cpu: 500m
+    - repoURL: https://github.com/ItsRyanG/homelab-infra.git
+      targetRevision: master
+      path: portainer/k8s
   destination:
     server: https://kubernetes.default.svc
     namespace: portainer
