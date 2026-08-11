@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cloudflared-config
+  namespace: cloudflare-tunnel
+data:
+  config.yaml: |
+    tunnel: 4a45edc2-492c-4e56-9214-6c114a5e2227
+    no-autoupdate: true
+    ingress:
+      - hostname: sonarr.agffa.ca
+        service: http://traefik-helm.traefik.svc.cluster.local:80
+      - hostname: radarr.agffa.ca
+        service: http://traefik-helm.traefik.svc.cluster.local:80
+      - hostname: nzbget.agffa.ca
+        service: http://traefik-helm.traefik.svc.cluster.local:80
+      - hostname: plex.agffa.ca
+        service: http://traefik-helm.traefik.svc.cluster.local:80
+      - service: http_status:404
