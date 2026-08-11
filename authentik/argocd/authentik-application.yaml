@@ -56,14 +56,11 @@ spec:
                 memory: 1Gi
                 cpu: 500m
 
+          blueprints:
+            configMaps:
+              - authentik-blueprints
+
           worker:
-            extraVolumes:
-              - name: blueprints-custom
-                configMap:
-                  name: authentik-blueprints
-            extraVolumeMounts:
-              - name: blueprints-custom
-                mountPath: /blueprints/custom
             livenessProbe:
               timeoutSeconds: 10
             readinessProbe:
