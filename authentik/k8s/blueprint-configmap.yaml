@@ -20,6 +20,7 @@ data:
           mode: forward_domain
           external_host: https://authentik.agffa.ca
           cookie_domain: agffa.ca
+          invalidation_flow: !Find [authentik_flows.flow, [slug, default-provider-invalidation-flow]]
 
       - model: authentik_core.application
         state: present
