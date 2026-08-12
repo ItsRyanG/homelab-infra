@@ -18,7 +18,7 @@ data:
         columns: 4
       Infrastructure:
         style: row
-        columns: 4
+        columns: 3
       Monitoring:
         style: row
         columns: 3
@@ -47,6 +47,16 @@ data:
 
   services.yaml: |
     - Media:
+        - Plex:
+            href: https://plex.agffa.ca
+            description: Media Server
+            icon: plex.png
+            namespace: plex
+            app: plex
+            widget:
+              type: plex
+              url: http://plex-service.plex.svc.cluster.local:32400
+              key: "{{HOMEPAGE_VAR_PLEX_TOKEN}}"
         - Sonarr:
             href: https://sonarr.agffa.ca
             description: TV Shows
@@ -78,14 +88,6 @@ data:
             widget:
               type: nzbget
               url: http://nzbget-service.nzbget.svc.cluster.local:6789
-              username: ryan
-              password: "{{HOMEPAGE_VAR_NZBGET_PASSWORD}}"
-        - Plex:
-            href: https://plex.agffa.ca
-            description: Media Server
-            icon: plex.png
-            namespace: plex
-            app: plex
 
     - Infrastructure:
         - ArgoCD:
@@ -98,10 +100,20 @@ data:
             href: https://longhorn.agffa.ca
             description: Block Storage
             icon: longhorn.png
+            namespace: longhorn-system
+            app: longhorn-manager
+            widget:
+              type: longhorn
+              url: http://longhorn-frontend.longhorn-system.svc.cluster.local
         - Portainer:
             href: https://portainer.agffa.ca
             description: Cluster Management
             icon: portainer.png
+            widget:
+              type: portainer
+              url: http://portainer.portainer.svc.cluster.local:9000
+              env: 1
+              key: "{{HOMEPAGE_VAR_PORTAINER_API_KEY}}"
         - Traefik:
             href: https://traefik.agffa.ca
             description: Reverse Proxy
@@ -111,6 +123,24 @@ data:
             widget:
               type: traefik
               url: http://traefik-dashboard.traefik.svc.cluster.local:8080
+        - Unraid:
+            href: http://192.168.2.100
+            description: NAS
+            icon: unraid.png
+            widget:
+              type: unraid
+              url: http://192.168.2.100
+              key: "{{HOMEPAGE_VAR_UNRAID_API_KEY}}"
+        - Unifi:
+            href: https://192.168.2.1
+            description: Network
+            icon: unifi.png
+            widget:
+              type: unifi
+              url: https://192.168.2.1
+              username: "{{HOMEPAGE_VAR_UNIFI_USERNAME}}"
+              password: "{{HOMEPAGE_VAR_UNIFI_PASSWORD}}"
+              site: default
 
     - Monitoring:
         - Grafana:
