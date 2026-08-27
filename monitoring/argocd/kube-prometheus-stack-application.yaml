@@ -23,6 +23,9 @@ spec:
             adminPassword: admin
             deploymentStrategy:
               type: Recreate
+            grafana.ini:
+              server:
+                root_url: https://grafana.agffa.ca
             ingress:
               enabled: true
               ingressClassName: traefik
@@ -48,7 +51,7 @@ spec:
             additionalDataSources:
               - name: Longhorn
                 type: prometheus
-                url: http://longhorn-backend.longhorn-system.svc.cluster.local:9500/metrics
+                url: http://kube-prometheus-stack-prometheus.monitoring.svc.cluster.local:9090
                 access: proxy
 
           prometheus:
