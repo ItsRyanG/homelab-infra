@@ -152,8 +152,7 @@ data:
             widget:
               type: grafana
               url: http://kube-prometheus-stack-grafana.monitoring.svc.cluster.local
-              username: admin
-              password: admin
+              key: "{{HOMEPAGE_VAR_GRAFANA_API_KEY}}"
         - Prometheus:
             href: https://prometheus.agffa.ca
             description: Metrics
