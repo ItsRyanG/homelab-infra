@@ -22,8 +22,10 @@ spec:
             enabled: true
             adminPassword: admin
             deploymentStrategy:
-              type: Recreate
-              rollingUpdate: null
+              type: RollingUpdate
+              rollingUpdate:
+                maxSurge: 0
+                maxUnavailable: 1
             grafana.ini:
               server:
                 root_url: https://grafana.agffa.ca
