@@ -43,11 +43,11 @@ data:
         originRequest:
           noTLSVerify: true
           originServerName: portainer.agffa.ca
-      - hostname: authentik.agffa.ca
+      - hostname: authelia.agffa.ca
         service: https://traefik-helm.traefik.svc.cluster.local:443
         originRequest:
           noTLSVerify: true
-          originServerName: authentik.agffa.ca
+          originServerName: authelia.agffa.ca
       - hostname: argocd.agffa.ca
         service: https://traefik-helm.traefik.svc.cluster.local:443
         originRequest:

@@ -1,0 +1,75 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: authelia-config
+  namespace: authelia
+data:
+  configuration.yml: |
+    ---
+    server:
+      host: 0.0.0.0
+      port: 9091
+
+    log:
+      level: info
+
+    default_redirection_url: https://home.agffa.ca
+
+    jwt_secret_file: /secrets/jwt_secret
+
+    authentication_backend:
+      file:
+        path: /secrets/users_database.yml
+        password:
+          algorithm: argon2id
+          iterations: 3
+          memory: 65536
+          parallelism: 4
+
+    session:
+      name: authelia_session
+      domain: agffa.ca
+      secret_file: /secrets/session_secret
+      expiration: 12h
+      inactivity: 45m
+      remember_me_duration: 1M
+
+    storage:
+      encryption_key_file: /secrets/storage_encryption_key
+      local:
+        path: /config/db.sqlite3
+
+    access_control:
+      default_policy: one_factor
+
+    notifier:
+      filesystem:
+        filename: /config/notification.txt
+
+    identity_providers:
+      oidc:
+        hmac_secret_file: /secrets/hmac_secret
+        jwks:
+          - key_id: homelab
+            algorithm: RS256
+            key_file: /secrets/oidc_private_key.pem
+        cors:
+          endpoints:
+            - authorization
+            - token
+            - revocation
+            - introspection
+        clients:
+          - client_id: portainer
+            client_name: Portainer
+            client_secret: '$2b$12$HVHWj/P0gaNMSSTpWa8iNeLIr9wMYttKv47PPfBE15WrCPUbkvoGe'
+            public: false
+            authorization_policy: one_factor
+            redirect_uris:
+              - https://portainer.agffa.ca/
+            scopes:
+              - openid
+              - profile
+              - email
+              - groups
+            userinfo_signed_response_alg: none
