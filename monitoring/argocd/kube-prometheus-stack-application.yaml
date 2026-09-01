@@ -51,11 +51,7 @@ spec:
               dashboards:
                 enabled: true
                 searchNamespace: ALL
-            additionalDataSources:
-              - name: Longhorn
-                type: prometheus
-                url: http://kube-prometheus-stack-prometheus.monitoring.svc.cluster.local:9090
-                access: proxy
+
 
           prometheus:
             prometheusSpec:
