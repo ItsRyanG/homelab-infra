@@ -7,15 +7,12 @@ data:
   configuration.yml: |
     ---
     server:
-      host: 0.0.0.0
-      port: 9091
+      address: tcp://0.0.0.0:9091/
 
     log:
       level: info
 
     default_redirection_url: https://home.agffa.ca
-
-    jwt_secret_file: /secrets/jwt_secret
 
     authentication_backend:
       file:
@@ -28,14 +25,14 @@ data:
 
     session:
       name: authelia_session
-      domain: agffa.ca
-      secret_file: /secrets/session_secret
       expiration: 12h
       inactivity: 45m
-      remember_me_duration: 1M
+      remember_me: 1M
+      cookies:
+        - domain: agffa.ca
+          authelia_url: https://authelia.agffa.ca
 
     storage:
-      encryption_key_file: /secrets/storage_encryption_key
       local:
         path: /config/db.sqlite3
 
@@ -48,11 +45,6 @@ data:
 
     identity_providers:
       oidc:
-        hmac_secret_file: /secrets/hmac_secret
-        jwks:
-          - key_id: homelab
-            algorithm: RS256
-            key_file: /secrets/oidc_private_key.pem
         cors:
           endpoints:
             - authorization

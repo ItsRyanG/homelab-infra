@@ -16,6 +16,11 @@ spec:
       containers:
         - name: authelia
           image: ghcr.io/authelia/authelia:4.38
+          args:
+            - --config
+            - /etc/authelia/configuration.yml
+            - --config
+            - /secrets/secrets.yml
           ports:
             - containerPort: 9091
           resources:
@@ -39,7 +44,7 @@ spec:
             periodSeconds: 30
           volumeMounts:
             - name: config
-              mountPath: /config/configuration.yml
+              mountPath: /etc/authelia/configuration.yml
               subPath: configuration.yml
               readOnly: true
             - name: secrets
