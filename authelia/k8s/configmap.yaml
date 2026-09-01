@@ -12,8 +12,6 @@ data:
     log:
       level: info
 
-    default_redirection_url: https://home.agffa.ca
-
     authentication_backend:
       file:
         path: /secrets/users_database.yml
@@ -31,6 +29,7 @@ data:
       cookies:
         - domain: agffa.ca
           authelia_url: https://authelia.agffa.ca
+          default_redirection_url: https://home.agffa.ca
 
     storage:
       local:
