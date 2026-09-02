@@ -96,6 +96,10 @@ data:
             icon: argocd.png
             namespace: argocd
             app: argocd-server
+            widget:
+              type: argocd
+              url: http://argocd-server.argocd.svc.cluster.local
+              key: "{{HOMEPAGE_VAR_ARGOCD_TOKEN}}"
         - Longhorn:
             href: https://longhorn.agffa.ca
             description: Block Storage
@@ -165,6 +169,11 @@ data:
             href: https://app.crowdsec.net
             description: Security Engine
             icon: crowdsec.png
+            widget:
+              type: crowdsec
+              url: http://crowdsec-service.crowdsec.svc.cluster.local:8080
+              username: homepage-watcher
+              password: "{{HOMEPAGE_VAR_CROWDSEC_PASSWORD}}"
 
   bookmarks.yaml: |
     - Quick Links:
