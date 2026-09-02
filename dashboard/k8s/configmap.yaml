@@ -110,11 +110,8 @@ data:
             href: https://portainer.agffa.ca
             description: Cluster Management
             icon: portainer.png
-            widget:
-              type: portainer
-              url: http://portainer.portainer.svc.cluster.local:9000
-              env: 1
-              key: "{{HOMEPAGE_VAR_PORTAINER_API_KEY}}"
+            namespace: portainer
+            app: portainer
         - Traefik:
             href: https://traefik.agffa.ca
             description: Reverse Proxy
