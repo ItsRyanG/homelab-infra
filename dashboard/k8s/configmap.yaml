@@ -107,9 +107,6 @@ data:
             namespace: longhorn-system
             app: longhorn-manager
             podSelector: app=longhorn-manager
-            widget:
-              type: longhorn
-              url: http://longhorn-frontend.longhorn-system.svc.cluster.local
         - Portainer:
             href: https://portainer.agffa.ca
             description: Cluster Management
