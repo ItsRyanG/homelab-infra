@@ -20,7 +20,10 @@ spec:
 
           grafana:
             enabled: true
-            adminPassword: admin
+            admin:
+              existingSecret: grafana-admin-credentials
+              userKey: admin-user
+              passwordKey: admin-password
             deploymentStrategy:
               type: RollingUpdate
               rollingUpdate:
