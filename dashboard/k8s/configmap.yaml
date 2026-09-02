@@ -102,6 +102,7 @@ data:
             icon: longhorn.png
             namespace: longhorn-system
             app: longhorn-manager
+            podSelector: app=longhorn-manager
             widget:
               type: longhorn
               url: http://longhorn-frontend.longhorn-system.svc.cluster.local
