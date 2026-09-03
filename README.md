@@ -91,18 +91,26 @@ graph TD
 
 ```
 infra/
+├── argocd/             # ArgoCD's own ingress and server config
 ├── authelia/           # SSO / ForwardAuth
 ├── cert-manager/       # TLS automation
 ├── cloudflare-tunnel/  # Zero Trust ingress
 ├── crowdsec/           # IPS agents + LAPI
-├── dashboard/          # Homepage config (applied directly — not ArgoCD managed)
-├── external-dns/       # Cloudflare DNS sync
+├── dashboard/          # Homepage dashboard
 ├── longhorn/           # Block storage
 ├── metallb/            # LoadBalancer VIP pool
-├── monitoring/         # Prometheus + Grafana
+├── monitoring/         # Prometheus + Grafana + Alertmanager
 └── portainer/          # Cluster management UI
 ```
 
 Each app follows the same pattern:
-- `argocd/<app>-application.yaml` — ArgoCD `Application` manifest; applied with `kubectl apply -f`
+- `argocd/<app>-application.yaml` — ArgoCD `Application` manifest
 - `k8s/` — Kubernetes manifests (Kustomize); synced by ArgoCD from this repo
+
+**`Application` manifests are not self-managed.** ArgoCD reconciles the resources *inside* an app, but it reads each app's own spec from the live `Application` object in the cluster. Editing a file under `argocd/` and pushing changes nothing until it is applied:
+
+```bash
+kubectl apply -f <app>/argocd/<app>-application.yaml
+```
+
+Traefik and external-dns live in their own repositories and are wired into the same ArgoCD instance.
