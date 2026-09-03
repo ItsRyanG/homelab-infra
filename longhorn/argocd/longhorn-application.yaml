@@ -20,7 +20,7 @@ spec:
           persistence:
             defaultClassReplicaCount: 2
     - repoURL: https://github.com/ItsRyanG/homelab-infra.git
-      targetRevision: master
+      targetRevision: main
       path: longhorn/k8s
   destination:
     server: https://kubernetes.default.svc

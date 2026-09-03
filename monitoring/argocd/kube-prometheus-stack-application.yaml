@@ -77,7 +77,7 @@ spec:
             enabled: true
 
     - repoURL: https://github.com/ItsRyanG/homelab-infra.git
-      targetRevision: master
+      targetRevision: main
       path: monitoring/k8s
 
   destination:

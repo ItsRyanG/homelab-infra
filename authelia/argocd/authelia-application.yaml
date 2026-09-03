@@ -9,7 +9,7 @@ spec:
   project: default
   source:
     repoURL: https://github.com/ItsRyanG/homelab-infra.git
-    targetRevision: master
+    targetRevision: main
     path: authelia/k8s
   destination:
     server: https://kubernetes.default.svc

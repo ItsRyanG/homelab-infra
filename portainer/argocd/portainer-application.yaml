@@ -44,7 +44,7 @@ spec:
               memory: 1Gi
               cpu: 500m
     - repoURL: https://github.com/ItsRyanG/homelab-infra.git
-      targetRevision: master
+      targetRevision: main
       path: portainer/k8s
   destination:
     server: https://kubernetes.default.svc
