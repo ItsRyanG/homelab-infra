@@ -9,6 +9,7 @@ spec:
       containers:
         - name: argocd-server
           args:
+            # --insecure: TLS is terminated at Traefik; the server speaks plain
+            # HTTP behind the ingress. Authentication stays enabled.
             - /usr/local/bin/argocd-server
             - --insecure
-            - --disable-auth
