@@ -36,6 +36,9 @@ metadata:
   namespace: portainer
 spec:
   schedule: "*/30 * * * *"
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
   jobTemplate:
     spec:
       template:
@@ -44,21 +47,37 @@ spec:
           restartPolicy: OnFailure
           containers:
             - name: ip-monitor
-              image: bitnami/kubectl:latest
+              # alpine/k8s bundles kubectl with a shell and curl. The previous
+              # bitnami/kubectl image shipped neither wget nor curl, so the
+              # lookup below silently produced an empty string.
+              image: alpine/k8s:1.31.13
               command:
                 - /bin/sh
                 - -c
                 - |
-                  CURRENT_IP=$(wget -qO- ifconfig.me)
+                  set -eu
+
+                  CURRENT_IP=$(curl -fsS --max-time 10 https://api.ipify.org || true)
+
+                  # Never patch on a failed lookup. Without this guard an empty
+                  # result writes "/32" into sourceRange, which is not a valid
+                  # CIDR and silently breaks the middleware.
+                  if ! echo "$CURRENT_IP" | grep -Eq '^([0-9]{1,3}\.){3}[0-9]{1,3}$'; then
+                    echo "Could not determine WAN IP (got: '${CURRENT_IP}'). Allowlist left unchanged."
+                    exit 0
+                  fi
+
                   EXISTING=$(kubectl get middleware ip-allowlist-home -n portainer \
                     -o jsonpath='{.spec.ipAllowList.sourceRange[0]}' | cut -d/ -f1)
-                  if [ "$CURRENT_IP" != "$EXISTING" ]; then
-                    echo "WAN IP changed: $EXISTING -> $CURRENT_IP. Updating allowlist."
-                    kubectl patch middleware ip-allowlist-home -n portainer --type='json' \
-                      -p="[{\"op\":\"replace\",\"path\":\"/spec/ipAllowList/sourceRange/0\",\"value\":\"${CURRENT_IP}/32\"}]"
-                  else
+
+                  if [ "$CURRENT_IP" = "$EXISTING" ]; then
                     echo "WAN IP unchanged: $CURRENT_IP"
+                    exit 0
                   fi
+
+                  echo "WAN IP changed: ${EXISTING:-<unset>} -> ${CURRENT_IP}. Updating allowlist."
+                  kubectl patch middleware ip-allowlist-home -n portainer --type='json' \
+                    -p="[{\"op\":\"replace\",\"path\":\"/spec/ipAllowList/sourceRange/0\",\"value\":\"${CURRENT_IP}/32\"}]"
               resources:
                 requests:
                   cpu: 10m
