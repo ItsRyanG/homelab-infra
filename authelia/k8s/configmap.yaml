@@ -39,25 +39,9 @@ data:
       filesystem:
         filename: /config/notification.txt
 
-    identity_providers:
-      oidc:
-        cors:
-          endpoints:
-            - authorization
-            - token
-            - revocation
-            - introspection
-        clients:
-          - client_id: portainer
-            client_name: Portainer
-            client_secret: '$2b$12$HVHWj/P0gaNMSSTpWa8iNeLIr9wMYttKv47PPfBE15WrCPUbkvoGe'
-            public: false
-            authorization_policy: one_factor
-            redirect_uris:
-              - https://portainer.agffa.ca/
-            scopes:
-              - openid
-              - profile
-              - email
-              - groups
-            userinfo_signed_response_alg: none
+    # identity_providers is deliberately absent from this ConfigMap.
+    #
+    # OIDC client entries carry a client_secret hash, and this repository is
+    # public. The whole block lives in the authelia-secret Secret instead,
+    # under secrets.yml, which the Deployment passes as a second --config
+    # file. Authelia merges the two at startup.
