@@ -8,9 +8,9 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/rgillespie/k8s.git
-    targetRevision: HEAD
-    path: infra/metallb/k8s
+    repoURL: https://github.com/ItsRyanG/homelab-infra.git
+    targetRevision: main
+    path: metallb/k8s
   destination:
     server: https://kubernetes.default.svc
     namespace: metallb-system
