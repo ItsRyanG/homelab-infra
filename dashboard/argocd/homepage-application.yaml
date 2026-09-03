@@ -15,7 +15,7 @@ spec:
         values: |
           image:
             repository: ghcr.io/gethomepage/homepage
-            tag: latest
+            tag: v2.2.0
 
           # The chart's ClusterRole already covers nodes, pods, namespaces,
           # ingresses and metrics.k8s.io, which is everything the Kubernetes

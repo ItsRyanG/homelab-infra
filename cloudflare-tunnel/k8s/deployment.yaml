@@ -20,7 +20,7 @@ spec:
     spec:
       containers:
         - name: cloudflared
-          image: cloudflare/cloudflared:latest
+          image: cloudflare/cloudflared:2026.8.3
           args:
             - tunnel
             - --config
