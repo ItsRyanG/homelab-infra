@@ -16,6 +16,39 @@ spec:
           nameOverride: prometheus
 
           alertmanager:
+            enabled: true
+            alertmanagerSpec:
+              retention: 120h
+              storage:
+                volumeClaimTemplate:
+                  spec:
+                    storageClassName: longhorn
+                    accessModes: [ReadWriteOnce]
+                    resources:
+                      requests:
+                        storage: 2Gi
+            # No ingress: Alertmanager is reachable in-cluster and through
+            # Grafana. Exposing it publicly would add a route that can silence
+            # alerts, which is not something to put behind one auth hop.
+            #
+            # Notifications currently go nowhere. To deliver them, create a
+            # Secret holding alertmanager.yaml with a real receiver and set
+            # alertmanagerSpec.configSecret to its name -- the same pattern
+            # used for grafana-admin-credentials above.
+
+          # k3s runs the controller manager, scheduler, etcd and kube-proxy
+          # inside the server process rather than as separately scraped
+          # components. Their Services exist but resolve to no endpoints, so
+          # the bundled KubeControllerManagerDown, KubeSchedulerDown,
+          # etcdMembersDown and KubeProxyDown rules fire permanently and
+          # falsely. This was invisible while Alertmanager was disabled.
+          kubeControllerManager:
+            enabled: false
+          kubeScheduler:
+            enabled: false
+          kubeEtcd:
+            enabled: false
+          kubeProxy:
             enabled: false
 
           grafana:
