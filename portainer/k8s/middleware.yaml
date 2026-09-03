@@ -5,8 +5,13 @@ metadata:
   namespace: portainer
 spec:
   ipAllowList:
+    # Placeholder only. The real value is the current WAN address, written at
+    # runtime by the ip-monitor CronJob and excluded from ArgoCD diffing via
+    # ignoreDifferences on the portainer Application. Do not commit a real
+    # address here: this repository is public, and the value changes anyway.
+    # 192.0.2.0/24 is RFC 5737 TEST-NET-1 and routes nowhere.
     sourceRange:
-      - "204.244.219.58/32"
+      - "192.0.2.1/32"
     ipStrategy:
       excludedIPs:
         - "173.245.48.0/20"

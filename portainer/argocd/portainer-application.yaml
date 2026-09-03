@@ -49,9 +49,19 @@ spec:
   destination:
     server: https://kubernetes.default.svc
     namespace: portainer
+  ignoreDifferences:
+    # sourceRange is owned by the ip-monitor CronJob at runtime. Without this,
+    # selfHeal reverts each patch back to the placeholder in git within minutes.
+    - group: traefik.io
+      kind: Middleware
+      name: ip-allowlist-home
+      namespace: portainer
+      jsonPointers:
+        - /spec/ipAllowList/sourceRange
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
     syncOptions:
       - CreateNamespace=true
+      - RespectIgnoreDifferences=true
