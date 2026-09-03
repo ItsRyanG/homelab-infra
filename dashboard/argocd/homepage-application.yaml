@@ -7,64 +7,73 @@ metadata:
     - resources-finalizer.argocd.argoproj.io
 spec:
   project: default
-  source:
-    repoURL: https://jameswynn.github.io/helm-charts
-    chart: homepage
-    targetRevision: 2.x
-    helm:
-      values: |
-        image:
-          repository: ghcr.io/gethomepage/homepage
-          tag: latest
+  sources:
+    - repoURL: https://jameswynn.github.io/helm-charts
+      chart: homepage
+      targetRevision: 2.x
+      helm:
+        values: |
+          image:
+            repository: ghcr.io/gethomepage/homepage
+            tag: latest
 
-        enableRbac: true
-        serviceAccount:
-          create: true
-          name: homepage
+          # The chart's ClusterRole already covers nodes, pods, namespaces,
+          # ingresses and metrics.k8s.io, which is everything the Kubernetes
+          # widget reads. dashboard/k8s therefore ships the ConfigMap only --
+          # a second ClusterRole named "homepage" would collide with this one.
+          enableRbac: true
+          serviceAccount:
+            create: true
+            name: homepage
 
-        ingress:
-          main:
-            enabled: true
-            ingressClassName: traefik
-            annotations:
-              traefik.ingress.kubernetes.io/router.entrypoints: websecure
-              traefik.ingress.kubernetes.io/router.tls: "true"
-              traefik.ingress.kubernetes.io/router.middlewares: traefik-authentik-forwardauth@kubernetescrd
-              cert-manager.io/cluster-issuer: letsencrypt-production
-            hosts:
-              - host: home.agffa.ca
-                paths:
-                  - path: /
-                    pathType: Prefix
-            tls:
-              - secretName: homepage-tls
-                hosts:
-                  - home.agffa.ca
+          ingress:
+            main:
+              enabled: true
+              ingressClassName: traefik
+              annotations:
+                traefik.ingress.kubernetes.io/router.entrypoints: websecure
+                traefik.ingress.kubernetes.io/router.tls: "true"
+                traefik.ingress.kubernetes.io/router.middlewares: traefik-authentik-forwardauth@kubernetescrd
+                cert-manager.io/cluster-issuer: letsencrypt-production
+              hosts:
+                - host: home.agffa.ca
+                  paths:
+                    - path: /
+                      pathType: Prefix
+              tls:
+                - secretName: homepage-tls
+                  hosts:
+                    - home.agffa.ca
 
-        persistence:
-          logs:
-            enabled: true
-            type: emptyDir
-            mountPath: /app/config/logs
+          persistence:
+            logs:
+              enabled: true
+              type: emptyDir
+              mountPath: /app/config/logs
 
-        config:
-          useExistingConfigMap: homepage-config
+          config:
+            useExistingConfigMap: homepage-config
 
-        env:
-          - name: HOMEPAGE_ALLOWED_HOSTS
-            value: "home.agffa.ca"
+          env:
+            - name: HOMEPAGE_ALLOWED_HOSTS
+              value: "home.agffa.ca"
 
-        envFrom:
-          - secretRef:
-              name: homepage-secret
+          envFrom:
+            - secretRef:
+                name: homepage-secret
 
-        resources:
-          requests:
-            memory: 256Mi
-            cpu: 100m
-          limits:
-            memory: 512Mi
-            cpu: 500m
+          resources:
+            requests:
+              memory: 256Mi
+              cpu: 100m
+            limits:
+              memory: 512Mi
+              cpu: 500m
+
+    - repoURL: https://github.com/ItsRyanG/homelab-infra.git
+      targetRevision: main
+      path: dashboard/k8s
+
   destination:
     server: https://kubernetes.default.svc
     namespace: homepage
