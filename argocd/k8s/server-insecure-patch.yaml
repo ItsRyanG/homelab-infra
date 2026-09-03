@@ -1,3 +1,15 @@
+# Reference copy of the argocd-server container flags.
+#
+# ArgoCD is installed from the upstream manifests, not from this repository,
+# so nothing here reconciles this Deployment automatically. This file records
+# the intended flags; apply them with:
+#
+#   kubectl patch deploy argocd-server -n argocd --type=json \
+#     -p='[{"op":"replace","path":"/spec/template/spec/containers/0/args",
+#           "value":["/usr/local/bin/argocd-server","--insecure"]}]'
+#
+# Do not `kubectl apply -f` this file. It is a partial Deployment spec, and
+# apply would treat it as the complete desired state.
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -9,7 +21,7 @@ spec:
       containers:
         - name: argocd-server
           args:
-            # --insecure: TLS is terminated at Traefik; the server speaks plain
+            # --insecure: TLS terminates at Traefik, so the server speaks plain
             # HTTP behind the ingress. Authentication stays enabled.
             - /usr/local/bin/argocd-server
             - --insecure

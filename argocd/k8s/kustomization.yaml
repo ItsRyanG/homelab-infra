@@ -6,8 +6,10 @@ namespace: argocd
 resources:
   - ingress.yaml
 
-patches:
-  - path: server-insecure-patch.yaml
-    target:
-      kind: Deployment
-      name: argocd-server
+# server-insecure-patch.yaml is deliberately not listed as a patch here.
+# Kustomize can only patch resources that are part of its own build, and the
+# argocd-server Deployment is installed from the upstream ArgoCD manifests
+# rather than from this repository. Declaring it as a patch target produced no
+# error and no effect: `kubectl apply -k` silently dropped it, which is why
+# --disable-auth survived in the cluster long after it was removed from git.
+# See server-insecure-patch.yaml for how the flags are applied.
