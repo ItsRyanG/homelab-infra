@@ -22,7 +22,7 @@ spec:
               traefik.ingress.kubernetes.io/router.entrypoints: websecure
               traefik.ingress.kubernetes.io/router.tls: "true"
               cert-manager.io/cluster-issuer: letsencrypt-production
-              traefik.ingress.kubernetes.io/router.middlewares: traefik-authentik-forwardauth@kubernetescrd
+              traefik.ingress.kubernetes.io/router.middlewares: traefik-authelia-forwardauth@kubernetescrd
             hosts:
               - host: portainer.agffa.ca
                 paths:
