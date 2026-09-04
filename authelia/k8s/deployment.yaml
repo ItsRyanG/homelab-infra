@@ -20,10 +20,15 @@ spec:
         - name: authelia
           image: ghcr.io/authelia/authelia:4.38
           args:
+            # Authelia merges these in order. Non-sensitive structure lives in
+            # the ConfigMap; anything with a credential in it lives in a Secret,
+            # because this repository is public.
             - --config
             - /etc/authelia/configuration.yml
             - --config
             - /secrets/secrets.yml
+            - --config
+            - /secrets-oidc/oidc.yml
           ports:
             - containerPort: 9091
           resources:
@@ -53,6 +58,9 @@ spec:
             - name: secrets
               mountPath: /secrets
               readOnly: true
+            - name: oidc
+              mountPath: /secrets-oidc
+              readOnly: true
             - name: data
               mountPath: /config
       volumes:
@@ -62,6 +70,11 @@ spec:
         - name: secrets
           secret:
             secretName: authelia-secret
+        # Holds identity_providers.oidc.clients, including the client secret
+        # digest. Created out of band -- see the comment in k8s/configmap.yaml.
+        - name: oidc
+          secret:
+            secretName: authelia-oidc
         - name: data
           persistentVolumeClaim:
             claimName: authelia-config

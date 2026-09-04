@@ -39,25 +39,13 @@ data:
       filesystem:
         filename: /config/notification.txt
 
-    identity_providers:
-      oidc:
-        cors:
-          endpoints:
-            - authorization
-            - token
-            - revocation
-            - introspection
-        clients:
-          - client_id: portainer
-            client_name: Portainer
-            client_secret: '$2b$12$HVHWj/P0gaNMSSTpWa8iNeLIr9wMYttKv47PPfBE15WrCPUbkvoGe'
-            public: false
-            authorization_policy: one_factor
-            redirect_uris:
-              - https://portainer.agffa.ca/
-            scopes:
-              - openid
-              - profile
-              - email
-              - groups
-            userinfo_signed_response_alg: none
+    # identity_providers is deliberately absent from this ConfigMap.
+    #
+    # OIDC clients carry a client_secret digest, and this repository is public.
+    # The whole block lives in the authelia-oidc Secret as oidc.yml, which the
+    # Deployment passes as a third --config file; Authelia merges all three.
+    #
+    # Note this block cannot simply be deleted: secrets.yml already defines
+    # identity_providers.oidc, and Authelia treats 'clients' as mandatory
+    # whenever that key exists. Removing it without providing clients elsewhere
+    # makes the config invalid and Authelia refuses to start.
